@@ -20,10 +20,20 @@ from datetime import datetime, date
 
 # Pet Schema
 class PetBase(BaseModel):
+    picture: str
     first_name: str
     last_name: str
     birthday: date 
-    adopt_date: str
+    adopt_date: date
+    age: int
+    weight: str
+    breed: str
+    color: str
+    other_characteristics: str
+    fav_person: str
+    fav_activity: str
+    fav_treat: str
+    fav_toy: str
 
 class PetCreate(PetBase):
     pass
@@ -45,7 +55,7 @@ class UserBase(BaseModel):
     email: str
 
 class UserCreate(UserBase):
-    pass
+    hashed_password: str
 
 class User(UserBase):
     id: int
