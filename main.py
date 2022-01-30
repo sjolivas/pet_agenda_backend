@@ -52,3 +52,7 @@ def create_pet_for_user(
 def read_pets(user_id: int, skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
     pets = crud.get_pets(db, user_id, skip=skip, limit=limit)
     return pets
+
+@app.get("/api")
+def root():
+    return {"message": "Soos is the bestest!"}

@@ -1,5 +1,5 @@
 from datetime import datetime
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime, Date
 from sqlalchemy.orm import relationship
 # from passlib.hash import bcrypt
 
@@ -25,7 +25,7 @@ class Pet(Base):
     owner_id = Column(Integer, ForeignKey("users.id"))
     first_name = Column(String)
     last_name = Column(String)
-    birthday = Column(String)
+    birthday = Column(Date)
     adopt_date = Column(String)
     date_created = Column(DateTime, default=datetime.utcnow())
     date_last_updated = Column(DateTime, default=datetime.utcnow())

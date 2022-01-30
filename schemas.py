@@ -1,6 +1,7 @@
+from re import T
 from typing import List
-from pydantic import BaseModel
-from datetime import datetime
+from pydantic import BaseModel, validator
+from datetime import datetime, date
 
 
 # Pydantic Models/Schemas
@@ -21,7 +22,7 @@ from datetime import datetime
 class PetBase(BaseModel):
     first_name: str
     last_name: str
-    birthday: str 
+    birthday: date 
     adopt_date: str
 
 class PetCreate(PetBase):
