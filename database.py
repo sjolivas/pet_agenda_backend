@@ -1,12 +1,10 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-import os
+from core.config import settings
 
 
-DB_PASSWORD = os.getenv("DB_PASSWORD")
-
-SQLALCHEMY_DATABASE_URL = f"postgresql://myuser:{DB_PASSWORD}@localhost/pet_agenda_db"
+SQLALCHEMY_DATABASE_URL = settings.DATABASE_URL
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
