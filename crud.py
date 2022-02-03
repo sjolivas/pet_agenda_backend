@@ -1,21 +1,9 @@
-from http.client import HTTPException
 from sqlalchemy.orm import Session
-from fastapi import Depends
-from fastapi.security import OAuth2PasswordBearer
-import os
-
 import models, schemas
 from passlib.hash import bcrypt
-# from jwt import encode, decode
 
-# from fastapi.security import sec
-
-# oauth2schema = OAuth2PasswordBearer(tokenUrl="/api/token")
-
-# User Create utility function
-# look up security for the password hashing
 def create_user(db: Session, user: schemas.UserCreate):
-    # fake_hashed_password = user.password + "not really hashed"
+
     db_user = models.User(
         email=user.email,
         hashed_password=bcrypt.hash(user.hashed_password),
@@ -26,30 +14,6 @@ def create_user(db: Session, user: schemas.UserCreate):
     db.commit()
     db.refresh(db_user)
     return db_user
-
-
-# def authenticate_user(email: str, password: str, db: Session):
-#     user = get_user_by_email(db=db, email=email)
-#     if not user or not user.verify_password(password):
-#         return False
-
-#     return user
-
-
-# def create_token(user: models.User):
-#     user_obj = {"email": schemas.User.from_orm(user).dict()["email"]}
-#     token = encode(user_obj, JWT_SECRET)
-#     return {"access_token": token, "token_type": "bearer"}
-
-
-# def get_current_user(db: Session = Depends(Session), token: str = Depends(oauth2schema)):
-#     try:
-#         payload = decode(token, JWT_SECRET, algorithms=["HS256"])
-#         user = db.query(models.User).get(payload["id"])
-#     except:
-#         raise HTTPException(status_code=401, detail="Invalid Email or Password")
-
-#     return schemas.User.from_orm(user)
 
 
 # Pet Create utility function
@@ -90,6 +54,31 @@ def get_pet(db: Session, pet_id: int):
 
 
 # User UPDATE utility functions
+def update_user():
+    pass
+
+def patch_user():
+    pass
+
 # Pet UPDATE utility functions
+def update_pet():
+    pass
+
+def patch_pet():
+    pass
+
+
 # User DELETE utility functions
+def delete_user(db: Session, user_id: int):
+    (db.query(models.User).filter(models.User.id == user_id).delete(synchronize_session=False))
+    db.commit()
+
+    return "Successfully Deleted"
+
 # Pet DELETE utility functions
+def delete_pet(db: Session, pet_id: int):
+    (db.query(models.Pet).filter(models.Pet.id == pet_id).delete(synchronize_session=False))
+    db.commit()
+
+    return "Successfully Deleted"
+
