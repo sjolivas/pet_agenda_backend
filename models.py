@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import List
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime, Date
 from sqlalchemy.orm import relationship
 from passlib.hash import bcrypt
@@ -46,3 +47,32 @@ class Pet(Base):
     updated_at = Column(DateTime, default=datetime.utcnow())
 
     owner = relationship("User", back_populates="pets")
+
+class Diet(Base):
+    __tablename__ = "diets"
+    id = Column(Integer, primary_key=True, index=True)
+    owner_id = Column(Integer, ForeignKey("pets.id"))
+    food_type = Column(String)
+    amount_per_day = Column(Integer)
+    feeding_frequency = Column(Integer)
+    treats = Column(List)
+    allergies = Column(List, default=None)
+    created_at = Column(DateTime, default=datetime.utcnow())
+    updated_at = Column(DateTime, default=datetime.utcnow())
+
+    owner = relationship("Pet", back_populates="diets")
+
+class MedicalInfo(Base):
+    __tablename__ = "medicalinfo"
+    id = Column(Integer, primary_key=True, index=True)
+    owner_id = Column(Integer, ForeignKey("pets.id"))
+    microchip_number = Column(String, default="")
+    vaccinations = Column(List)
+    last_vet_apt = Column(Date)
+    past_injuries = Column(List)
+    medications = Column(List)
+    allergies = Column(List)
+    created_at = Column(DateTime, default=datetime.utcnow())
+    updated_at = Column(DateTime, default=datetime.utcnow())
+
+    owner = relationship("Pet", back_populates="medicalinfo")

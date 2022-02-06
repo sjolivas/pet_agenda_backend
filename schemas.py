@@ -1,23 +1,69 @@
-from typing import List
+from typing import List, Optional
 from pydantic import BaseModel, NonNegativeInt, EmailStr
 from datetime import datetime, date
+
+
+# Medical Information Schema
+class MedicalInfoBase(BaseModel):
+    microchip_number: str
+    vaccinations: list
+    last_vet_apt: date
+    past_injuries: Optional[list] = None
+    medications: Optional[list] = None
+    allergies: Optional[list] = None
+
+
+class MedicalInfoCreate(MedicalInfoBase):
+    pass
+
+
+class MedicalInfo(MedicalInfoBase):
+    id: int
+    owner_id: int
+    created_at: datetime
+    updated_at: datetime
+
+    class Config:
+        orm_mode = True
+
+# Diet Schema
+class DietBase(BaseModel):
+    food_type:str
+    amount_per_day: int
+    feeding_frequency: int
+    treats: List
+    allergies: Optional[str] = None
+
+
+class DietCreate(DietBase):
+    pass
+
+
+class Diet(DietBase):
+    id: int
+    owner_id: int
+    created_at: datetime
+    updated_at: datetime
+
+    class Config:
+        orm_mode = True
 
 # Pet Schema
 class PetBase(BaseModel):
     picture: str
     first_name: str
     last_name: str
-    birthday: date
-    adopt_date: date
+    birthday: Optional[date] = None
+    adopt_date: Optional[date] = None
     age: NonNegativeInt
     weight: int
     breed: str
-    color: str
-    other_characteristics: str
-    fav_person: str
-    fav_activity: str
-    fav_treat: str
-    fav_toy: str
+    color: Optional[str] = None
+    other_characteristics: Optional[str] = None
+    fav_person: Optional[str] = None
+    fav_activity: Optional[str] = None
+    fav_treat: Optional[str] = None
+    fav_toy: Optional[str] = None
 
 
 class PetCreate(PetBase):
@@ -53,6 +99,12 @@ class User(UserBase):
 
     class Config:
         orm_mode = True
+
+class UserUpdate(BaseModel):
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+    email: Optional[EmailStr] = None
+    hashed_password: Optional[str] = None
 
 # Pydantic Models/Schemas
 # need to create a PetBase and UserBase

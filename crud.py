@@ -1,9 +1,10 @@
 from sqlalchemy.orm import Session
 import models, schemas
 from passlib.hash import bcrypt
+from datetime import datetime
+
 
 def create_user(db: Session, user: schemas.UserCreate):
-
     db_user = models.User(
         email=user.email,
         hashed_password=bcrypt.hash(user.hashed_password),
@@ -53,16 +54,30 @@ def get_pet(db: Session, pet_id: int):
     return db.query(models.Pet).filter(models.Pet.id == pet_id).first()
 
 
-# User UPDATE utility functions
-def update_user():
-    pass
+def update_user(db: Session, user_id: int, user: schemas.UserCreate):
+    db_user = get_user(db, user_id)
+    db_user.first_name = user.first_name
+    db_user.last_name = user.last_name
+    db_user.email = user.email
+    db_user.hashed_password = user.hashed_password
 
-def patch_user():
-    pass
+    db.commit()
+    db.refresh(db_user)
+
+    return schemas.User.from_orm(db_user)
 
 # Pet UPDATE utility functions
-def update_pet():
-    pass
+def update_pet(db: Session, pet_id: int, pet: schemas.PetCreate):
+    db_pet = get_pet(db, pet_id)
+    db_pet.first_name = pet.first_name
+    db_pet.last_name = pet.last_name
+    db_pet.updated_at = datetime.utcnow()
+
+    db.commit()
+    db.refresh(db_pet)
+
+    return schemas.Pet.from_orm(db_pet)
+
 
 def patch_pet():
     pass
@@ -70,15 +85,23 @@ def patch_pet():
 
 # User DELETE utility functions
 def delete_user(db: Session, user_id: int):
-    (db.query(models.User).filter(models.User.id == user_id).delete(synchronize_session=False))
+    (
+        db.query(models.User)
+        .filter(models.User.id == user_id)
+        .delete(synchronize_session=False)
+    )
     db.commit()
 
-    return "Successfully Deleted"
+    return {"message"": Successfully Deleted"}
+
 
 # Pet DELETE utility functions
 def delete_pet(db: Session, pet_id: int):
-    (db.query(models.Pet).filter(models.Pet.id == pet_id).delete(synchronize_session=False))
+    (
+        db.query(models.Pet)
+        .filter(models.Pet.id == pet_id)
+        .delete(synchronize_session=False)
+    )
     db.commit()
 
     return "Successfully Deleted"
-
