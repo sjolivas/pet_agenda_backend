@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import List
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime, Date
 from sqlalchemy.orm import relationship
 from passlib.hash import bcrypt
@@ -17,6 +16,7 @@ class User(Base):
     email = Column(String, unique=True, index=True)
     hashed_password = Column(String)
     created_at = Column(DateTime, default=datetime.utcnow())
+    updated_at = Column(DateTime, default=datetime.utcnow())
     is_active = Column(Boolean, default=True)
 
     pets = relationship("Pet", back_populates="owner")
@@ -55,8 +55,8 @@ class Diet(Base):
     food_type = Column(String)
     amount_per_day = Column(Integer)
     feeding_frequency = Column(Integer)
-    treats = Column(List)
-    allergies = Column(List, default=None)
+    treats = Column(String)
+    allergies = Column(String, default=None)
     created_at = Column(DateTime, default=datetime.utcnow())
     updated_at = Column(DateTime, default=datetime.utcnow())
 
@@ -67,12 +67,26 @@ class MedicalInfo(Base):
     id = Column(Integer, primary_key=True, index=True)
     owner_id = Column(Integer, ForeignKey("pets.id"))
     microchip_number = Column(String, default="")
-    vaccinations = Column(List)
+    vaccinations = Column(String)
     last_vet_apt = Column(Date)
-    past_injuries = Column(List)
-    medications = Column(List)
-    allergies = Column(List)
+    past_injuries = Column(String)
+    medications = Column(String)
+    allergies = Column(String)
     created_at = Column(DateTime, default=datetime.utcnow())
     updated_at = Column(DateTime, default=datetime.utcnow())
 
     owner = relationship("Pet", back_populates="medicalinfo")
+
+class Event(Base):
+    __tablename__ = "events"
+    id = Column(Integer, primary_key=True, index=True)
+    owner_id = Column(Integer, ForeignKey("pets.id"))
+    title = Column(String)
+    start_date_time_utc = Column(DateTime, default=datetime.utcnow())
+    end_date_time_utc = Column(DateTime, default=datetime.utcnow())
+    is_all_day = Column(Boolean)
+    is_reocurring = Column(Boolean)
+    created_at = Column(DateTime, default=datetime.utcnow())
+    updated_at = Column(DateTime, default=datetime.utcnow())
+
+    owner = relationship("User", back_populates="pets")

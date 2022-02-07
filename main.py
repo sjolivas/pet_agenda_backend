@@ -67,7 +67,7 @@ def read_user(user_id: int, db: Session = Depends(get_db)):
 @app.post(
     "/users/{user_id}/pets/",
     status_code=status.HTTP_201_CREATED,
-    response_model=schemas.Pet,
+    response_model=schemas.PetCreate,
 )
 def create_pet_for_user(
     user_id: int, pet: schemas.PetCreate, db: Session = Depends(get_db)
@@ -106,21 +106,6 @@ def read_pet(pet_id: int, user_id: int, db: Session = Depends(get_db)):
     if pet is None:
         raise HTTPException(status_code=404, detail="Pet not found")
     return pet
-
-
-# @app.patch("/users/{user_id}", response_model=schemas.UserUpdate)
-# def update_user(user_id: int, user: schemas.User):
-#     with Session(engine) as session:
-#         db_user = session.get(schemas.User, user_id)
-#         if not db_user:
-#             raise HTTPException(status_code=404, detail="User not found")
-#         user_data = user.dict(exclude_unset=True)
-#         for key, value in user_data.items():
-#             setattr(db_user, key, value)
-#         session.add(db_user)
-#         session.commit()
-#         session.refresh(db_user)
-#         return db_user
 
 # Update USER
 @app.put("/user/{user_id}", status_code=200)

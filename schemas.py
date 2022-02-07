@@ -2,26 +2,46 @@ from typing import List, Optional
 from pydantic import BaseModel, NonNegativeInt, EmailStr
 from datetime import datetime, date
 
+# Event Schema
+class EventBase(BaseModel):
+    title: str
+    start_date_time_utc: date
+    end_date_time_utc: date
+    is_all_day: bool
+    is_reocurring: bool
+
+
+class EventCreate(EventBase):
+    created_at: datetime
+
+
+class Event(EventBase):
+    id: int
+    owner_id: int
+    updated_at: datetime
+
+
+    class Config:
+        orm_mode = True
 
 # Medical Information Schema
 class MedicalInfoBase(BaseModel):
     microchip_number: str
-    vaccinations: list
+    vaccinations: List[str]
     last_vet_apt: date
-    past_injuries: Optional[list] = None
-    medications: Optional[list] = None
-    allergies: Optional[list] = None
+    past_injuries: List[str] = []
+    medications: List[str] = []
+    allergies: List[str] = []
 
 
 class MedicalInfoCreate(MedicalInfoBase):
-    pass
-
+    created_at: datetime
 
 class MedicalInfo(MedicalInfoBase):
     id: int
     owner_id: int
-    created_at: datetime
     updated_at: datetime
+
 
     class Config:
         orm_mode = True
@@ -31,19 +51,19 @@ class DietBase(BaseModel):
     food_type:str
     amount_per_day: int
     feeding_frequency: int
-    treats: List
+    treats: List[str] = []
     allergies: Optional[str] = None
 
 
 class DietCreate(DietBase):
-    pass
+    created_at: datetime
 
 
 class Diet(DietBase):
     id: int
     owner_id: int
-    created_at: datetime
     updated_at: datetime
+
 
     class Config:
         orm_mode = True
@@ -67,13 +87,12 @@ class PetBase(BaseModel):
 
 
 class PetCreate(PetBase):
-    pass
+    created_at: datetime
 
 
 class Pet(PetBase):
     id: int
     owner_id: int
-    created_at: datetime
     updated_at: datetime
 
     class Config:
@@ -85,26 +104,28 @@ class UserBase(BaseModel):
     first_name: str
     last_name: str
     email: EmailStr
+    updated_at: datetime
 
 
 class UserCreate(UserBase):
     hashed_password: str
+    created_at: datetime
 
 
 class User(UserBase):
     id: int
     is_active: bool
     pets: List[Pet] = []
-    created_at: datetime
+
 
     class Config:
         orm_mode = True
 
-class UserUpdate(BaseModel):
-    first_name: Optional[str] = None
-    last_name: Optional[str] = None
-    email: Optional[EmailStr] = None
-    hashed_password: Optional[str] = None
+# class UserUpdate(BaseModel):
+#     first_name: Optional[str] = None
+#     last_name: Optional[str] = None
+#     email: Optional[EmailStr] = None
+#     hashed_password: Optional[str] = None
 
 # Pydantic Models/Schemas
 # need to create a PetBase and UserBase
