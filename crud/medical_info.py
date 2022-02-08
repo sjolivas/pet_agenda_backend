@@ -24,6 +24,11 @@ def get_medicalinfo(db: Session, medicalinfo_id: int, pet_id: int):
     )
 
 
+# medicalinfo Update Utility function
+def update_medicalinfo():
+    pass
+
+
 # Medical Info DELETE utility functions
 def delete_medicalinfo(db: Session, medicalinfo_id: int, pet_id: int):
     (

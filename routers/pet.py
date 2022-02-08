@@ -8,7 +8,7 @@ import schemas
 
 router = APIRouter(prefix="/users", tags=["pets"])
 
-# Create
+# Create - post operation
 @router.post(
     "/{user_id}/pets/",
     status_code=status.HTTP_201_CREATED,
@@ -25,7 +25,7 @@ def create_pet_for_user(
     return create_user_pet(db=db, pet=pet, user_id=user_id)
 
 
-# Read
+# Read - get operation
 @router.get(
     "/{user_id}/pets/",
     status_code=status.HTTP_200_OK,
@@ -61,7 +61,17 @@ def read_pet(
     return pet
 
 
-# Delete
+# Update - patch operation
+@router.patch(
+    "/{user_id}/pets/{pet_id}",
+    status_code=status.HTTP_202_ACCEPTED,
+    response_model=schemas.Pet,
+)
+def patch_pet_info():
+    pass
+
+
+# Delete - delete operation
 @router.delete("/{user_id}/pets/{pet_id}", status_code=200)
 def delete_pet(
     pet_id: int, user_id: int, db: database.SessionLocal = Depends(database.get_db)

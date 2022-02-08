@@ -7,7 +7,7 @@ import schemas
 
 router = APIRouter(prefix="/users", tags=["diet"])
 
-# Create
+# Create - post operation
 @router.post(
     "/{user_id}/pet/{pet_id}/diet",
     status_code=status.HTTP_201_CREATED,
@@ -25,7 +25,7 @@ def create_diet(
     return create_pet_diet(db=db, diet=diet, pet_id=pet_id)
 
 
-# Read
+# Read - get operation
 @router.get(
     "/{user_id}/pet/{pet_id}/diet/{diet_id}",
     status_code=status.HTTP_200_OK,
@@ -46,7 +46,17 @@ def read_diet(
     return diet
 
 
-# Delete
+# Update - patch operation
+@router.patch(
+    "/{user_id}/pet/{pet_id}/diet/{diet_id}",
+    status_code=status.HTTP_202_ACCEPTED,
+    response_model=schemas.Diet,
+)
+def patch_diet_info():
+    pass
+
+
+# Delete - delete operation
 @router.delete(
     "/{user_id}/pet/{pet_id}/diet/{diet_id}",
     status_code=status.HTTP_200_OK,

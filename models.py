@@ -30,7 +30,6 @@ class Pet(Base):
     __tablename__ = "pets"
     id = Column(Integer, primary_key=True, index=True)
     owner_id = Column(Integer, ForeignKey("users.id"))
-    picture = Column(String)
     first_name = Column(String)
     last_name = Column(String)
     birthday = Column(Date)

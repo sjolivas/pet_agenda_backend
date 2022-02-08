@@ -32,6 +32,11 @@ def get_pet(db: Session, pet_id: int, user_id: int):
     )
 
 
+# pet Update Utility function
+def update_pet():
+    pass
+
+
 # Pet DELETE utility functions
 def delete_pet(db: Session, pet_id: int, user_id: int):
     (

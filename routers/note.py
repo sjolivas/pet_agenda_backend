@@ -8,7 +8,7 @@ import schemas
 
 router = APIRouter(prefix="/users", tags=["notes"])
 
-# Create
+# Create - post operation
 @router.post(
     "/{user_id}/notes",
     status_code=status.HTTP_201_CREATED,
@@ -22,7 +22,7 @@ def create_note(
     return create_note(db=db, note=note, user_id=user_id)
 
 
-# Read
+# Read - get operation
 @router.get(
     "/{user_id}/notes",
     status_code=status.HTTP_200_OK,
@@ -59,7 +59,17 @@ def read_note(
     return note
 
 
-# Delete
+# Update - patch operation
+@router.patch(
+    "/{user_id}/notes/{note_id}",
+    status_code=status.HTTP_202_ACCEPTED,
+    response_model=schemas.Note,
+)
+def patch_note_info():
+    pass
+
+
+# Delete - delete operation
 @router.delete(
     "/{user_id}/notes/{note_id}",
     status_code=status.HTTP_200_OK,

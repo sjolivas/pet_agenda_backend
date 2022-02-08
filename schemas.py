@@ -67,7 +67,6 @@ class Diet(DietBase):
 
 # Pet Schema
 class PetBase(BaseModel):
-    picture: str
     first_name: str
     last_name: str
     birthday: Optional[date] = None

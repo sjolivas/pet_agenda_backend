@@ -22,6 +22,11 @@ def get_diet(db: Session, diet_id: int, pet_id: int):
     )
 
 
+# diet Update Utility function
+def update_diet():
+    pass
+
+
 # Diet DELETE utility functions
 def delete_diet(db: Session, diet_id: int, pet_id: int):
     (

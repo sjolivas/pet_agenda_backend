@@ -32,6 +32,11 @@ def get_note(db: Session, note_id: int, user_id: int):
     )
 
 
+# Note Update Utility function
+def update_note():
+    pass
+
+
 # Note DELETE utility functions
 def delete_note(db: Session, note_id: int, user_id: int):
     (
