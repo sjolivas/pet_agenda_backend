@@ -20,6 +20,7 @@ class User(Base):
     is_active = Column(Boolean, default=True)
 
     pets = relationship("Pet", back_populates="owner")
+    notes = relationship("Note", back_populates="owner")
 
     def verify_password(self, password: str):
         return bcrypt.verify(password, self.hashed_password)
@@ -46,7 +47,11 @@ class Pet(Base):
     created_at = Column(DateTime, default=datetime.utcnow())
     updated_at = Column(DateTime, default=datetime.utcnow())
 
+    diets = relationship("Diet", back_populates="owner")
+    medicalinfo = relationship("MedicalInfo", back_populates="owner")
+
     owner = relationship("User", back_populates="pets")
+
 
 class Diet(Base):
     __tablename__ = "diets"
@@ -61,6 +66,7 @@ class Diet(Base):
     updated_at = Column(DateTime, default=datetime.utcnow())
 
     owner = relationship("Pet", back_populates="diets")
+
 
 class MedicalInfo(Base):
     __tablename__ = "medicalinfo"
@@ -77,16 +83,14 @@ class MedicalInfo(Base):
 
     owner = relationship("Pet", back_populates="medicalinfo")
 
-class Event(Base):
-    __tablename__ = "events"
+
+class Note(Base):
+    __tablename__ = "notes"
     id = Column(Integer, primary_key=True, index=True)
-    owner_id = Column(Integer, ForeignKey("pets.id"))
+    owner_id = Column(Integer, ForeignKey("users.id"))
     title = Column(String)
-    start_date_time_utc = Column(DateTime, default=datetime.utcnow())
-    end_date_time_utc = Column(DateTime, default=datetime.utcnow())
-    is_all_day = Column(Boolean)
-    is_reocurring = Column(Boolean)
+    message = Column(String)
     created_at = Column(DateTime, default=datetime.utcnow())
     updated_at = Column(DateTime, default=datetime.utcnow())
 
-    owner = relationship("User", back_populates="pets")
+    owner = relationship("User", back_populates="notes")
