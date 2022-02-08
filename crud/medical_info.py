@@ -1,6 +1,5 @@
 from sqlalchemy.orm import Session
 import models, schemas
-from passlib.hash import bcrypt
 from datetime import datetime
 
 # MedicalInfo Create Utility Function

@@ -1,6 +1,12 @@
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status
-from crud.user import get_user, get_users, get_user_by_email, delete_user, create_user
+from crud.user import (
+    get_user,
+    get_users,
+    get_user_by_email,
+    delete_user,
+    create_new_user,
+)
 import database
 import schemas
 
@@ -15,7 +21,7 @@ def create_user(
     db_user = get_user_by_email(db, email=user.email)
     if db_user:
         raise HTTPException(status_code=409, detail="Email already registered")
-    return create_user(db=db, user=user)
+    return create_new_user(db=db, user=user)
 
 
 # Read - get operations

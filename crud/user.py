@@ -4,7 +4,7 @@ from passlib.hash import bcrypt
 from datetime import datetime
 
 # User Create Utility Function
-def create_user(db: Session, user: schemas.UserCreate):
+def create_new_user(db: Session, user: schemas.UserCreate):
     db_user = models.User(
         email=user.email,
         hashed_password=bcrypt.hash(user.hashed_password),
