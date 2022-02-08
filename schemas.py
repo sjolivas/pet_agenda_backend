@@ -2,6 +2,27 @@ from typing import List, Optional
 from pydantic import BaseModel, NonNegativeInt, EmailStr
 from datetime import datetime, date
 
+from models import Item
+
+# Shopping List Schema
+class ShoppingListBase(BaseModel):
+    title: Optional[str] = "Shopping List"
+    items: List[Item] = []
+
+
+class ShoppingListCreate(ShoppingListBase):
+    created_at: datetime
+
+
+class ShoppingList(ShoppingListBase):
+    id: int
+    owner_id: int
+    updated_at: datetime
+
+    class Config:
+        orm_mode = True
+
+
 # Note Schema
 class NoteBase(BaseModel):
     title: str

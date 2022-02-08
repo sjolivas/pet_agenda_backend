@@ -1,4 +1,5 @@
 from datetime import datetime
+from email.mime import base
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime, Date
 from sqlalchemy.orm import relationship
 from passlib.hash import bcrypt
@@ -93,3 +94,28 @@ class Note(Base):
     updated_at = Column(DateTime, default=datetime.utcnow())
 
     owner = relationship("User", back_populates="notes")
+
+
+class ShoppingList(Base):
+    __tablename__ = "shoppinglist"
+    id = Column(Integer, primary_key=True, index=True)
+    owner_id = Column(Integer, ForeignKey("users.id"))
+    title = Column(String, default="Shopping List")
+    items = Column(String)
+    created_at = Column(DateTime, default=datetime.utcnow())
+    updated_at = Column(DateTime, default=datetime.utcnow())
+
+    items = relationship("Item", back_populates="owner")
+    owner = relationship("User", back_populates="shoppinglist")
+
+
+class Item(Base):
+    __tablename__ = "items"
+    id = Column(Integer, primary_key=True, index=True)
+    owner_id = Column(Integer, ForeignKey("shoppinglist.id"))
+    name = Column(String)
+    count = Column(String)
+    created_at = Column(DateTime, default=datetime.utcnow())
+    updated_at = Column(DateTime, default=datetime.utcnow())
+
+    owner = relationship("ShoppingList", back_populates="items")
