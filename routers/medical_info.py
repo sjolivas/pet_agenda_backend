@@ -4,7 +4,7 @@ import database
 import schemas
 
 
-router = APIRouter()
+router = APIRouter(tags=["medical info"])
 
 # Create
 @router.post(

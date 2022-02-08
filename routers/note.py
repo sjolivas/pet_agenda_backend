@@ -5,7 +5,7 @@ import database
 import schemas
 
 
-router = APIRouter()
+router = APIRouter(tags=["notes"])
 
 # Create
 @router.post(
