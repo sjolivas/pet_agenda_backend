@@ -71,4 +71,4 @@ def delete_pet(
         raise HTTPException(status_code=404, detail="User not found")
     if pet is None:
         raise HTTPException(status_code=404, detail="Pet not found")
-    return crud.delete_pet(db, pet_id)
+    return crud.delete_pet(db, pet_id, user_id)

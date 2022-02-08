@@ -98,41 +98,21 @@ def get_pet(db: Session, pet_id: int, user_id: int):
 
 
 # Diet READ utility functions
-def get_diets(db: Session, pet_id: int, skip: int = 0, limit: int = 100):
+def get_diet(db: Session, diet_id: int, pet_id: int):
     return (
         db.query(models.Diet)
         .filter(models.Diet.owner_id == pet_id)
-        .offset(skip)
-        .limit(limit)
-        .all()
-    )
-
-
-def get_diet(db: Session, diet_id: int, user_id: int):
-    return (
-        db.query(models.Diet)
-        .filter(models.Diet.owner_id == user_id)
         .filter(models.Diet.id == diet_id)
         .first()
     )
 
 
 # MedicalInfo READ utility functions
-def get_all_medinfo(db: Session, pet_id: int, skip: int = 0, limit: int = 100):
-    return (
-        db.query(models.MedicalInfo)
-        .filter(models.MedicalInfo.owner_id == pet_id)
-        .offset(skip)
-        .limit(limit)
-        .all()
-    )
-
-
-def get_medicalinfo(db: Session, medicalinfo_id: int, user_id: int):
+def get_medicalinfo(db: Session, medicalinfo_id: int, pet_id: int):
     return (
         db.query(models.MedicalInfo)
         .filter(models.MedicalInfo.id == medicalinfo_id)
-        .filter(models.MedicalInfo.owner_id == user_id)
+        .filter(models.MedicalInfo.owner_id == pet_id)
         .first()
     )
 
@@ -174,9 +154,10 @@ def delete_user(db: Session, user_id: int):
 
 
 # Pet DELETE utility functions
-def delete_pet(db: Session, pet_id: int):
+def delete_pet(db: Session, pet_id: int, user_id: int):
     (
         db.query(models.Pet)
+        .filter(models.Pet.owner_id == user_id)
         .filter(models.Pet.id == pet_id)
         .delete(synchronize_session=False)
     )
@@ -186,10 +167,11 @@ def delete_pet(db: Session, pet_id: int):
 
 
 # Diet DELETE utility functions
-def delete_pet(db: Session, pet_id: int):
+def delete_diet(db: Session, diet_id: int, pet_id: int):
     (
-        db.query(models.Pet)
-        .filter(models.Pet.id == pet_id)
+        db.query(models.Diet)
+        .filter(models.Diet.owner_id == pet_id)
+        .filter(models.Diet.id == diet_id)
         .delete(synchronize_session=False)
     )
     db.commit()
@@ -198,10 +180,11 @@ def delete_pet(db: Session, pet_id: int):
 
 
 # Medical Info DELETE utility functions
-def delete_pet(db: Session, pet_id: int):
+def delete_medicalinfo(db: Session, medicalinfo_id: int, pet_id: int):
     (
-        db.query(models.Pet)
-        .filter(models.Pet.id == pet_id)
+        db.query(models.MedicalInfo)
+        .filter(models.MedicalInfo.owner_id == pet_id)
+        .filter(models.MedicalInfo.id == medicalinfo_id)
         .delete(synchronize_session=False)
     )
     db.commit()
@@ -210,10 +193,11 @@ def delete_pet(db: Session, pet_id: int):
 
 
 # Note DELETE utility functions
-def delete_pet(db: Session, pet_id: int):
+def delete_note(db: Session, note_id: int, user_id: int):
     (
-        db.query(models.Pet)
-        .filter(models.Pet.id == pet_id)
+        db.query(models.Note)
+        .filter(models.Note.owner_id == user_id)
+        .filter(models.Note.id == note_id)
         .delete(synchronize_session=False)
     )
     db.commit()
