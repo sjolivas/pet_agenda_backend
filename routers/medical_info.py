@@ -4,11 +4,11 @@ import database
 import schemas
 
 
-router = APIRouter(tags=["medical info"])
+router = APIRouter(prefix="/users", tags=["medical info"])
 
 # Create
 @router.post(
-    "/users/{user_id}/pets/{pet_id}/medicalinfo",
+    "/{user_id}/pets/{pet_id}/medicalinfo",
     status_code=status.HTTP_201_CREATED,
     response_model=schemas.MedicalInfo,
 )
@@ -22,7 +22,7 @@ def create_medinfo(
 
 # Read
 @router.get(
-    "/users/{user_id}/pet/{pet_id}/medicalinfo/{medicalinfo_id}",
+    "/{user_id}/pet/{pet_id}/medicalinfo/{medicalinfo_id}",
     status_code=status.HTTP_200_OK,
     response_model=schemas.MedicalInfo,
 )
@@ -43,7 +43,7 @@ def read_medicalinfo(
 
 # Delete
 @router.delete(
-    "/users/{user_id}/pet/{pet_id}/medicalinfo/{medicalinfo_id}",
+    "/{user_id}/pet/{pet_id}/medicalinfo/{medicalinfo_id}",
     status_code=status.HTTP_200_OK,
 )
 def delete_pet_medicalinfo(

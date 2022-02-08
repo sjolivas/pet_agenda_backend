@@ -5,11 +5,11 @@ import database
 import schemas
 
 
-router = APIRouter(tags=["pets"])
+router = APIRouter(prefix="/users", tags=["pets"])
 
 # Create
 @router.post(
-    "/users/{user_id}/pets/",
+    "/{user_id}/pets/",
     status_code=status.HTTP_201_CREATED,
     response_model=schemas.Pet,
 )
@@ -26,7 +26,7 @@ def create_pet_for_user(
 
 # Read
 @router.get(
-    "/users/{user_id}/pets/",
+    "/{user_id}/pets/",
     status_code=status.HTTP_200_OK,
     response_model=List[schemas.Pet],
 )
@@ -44,7 +44,7 @@ def read_pets(
 
 
 @router.get(
-    "/users/{user_id}/pets/{pet_id}",
+    "/{user_id}/pets/{pet_id}",
     status_code=status.HTTP_200_OK,
     response_model=schemas.Pet,
 )
@@ -61,7 +61,7 @@ def read_pet(
 
 
 # Delete
-@router.delete("/user/{user_id}/pets/{pet_id}", status_code=200)
+@router.delete("/{user_id}/pets/{pet_id}", status_code=200)
 def delete_pet(
     pet_id: int, user_id: int, db: database.SessionLocal = Depends(database.get_db)
 ):

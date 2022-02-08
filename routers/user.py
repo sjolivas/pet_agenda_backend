@@ -5,12 +5,10 @@ import database
 import schemas
 
 
-router = APIRouter(tags=["users"])
+router = APIRouter(prefix="/users", tags=["users"])
 
 # Create
-@router.post(
-    "/users/", status_code=status.HTTP_201_CREATED, response_model=schemas.User
-)
+@router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.User)
 def create_user(
     user: schemas.UserCreate, db: database.SessionLocal = Depends(database.get_db)
 ):
@@ -21,9 +19,7 @@ def create_user(
 
 
 # Read
-@router.get(
-    "/users/", status_code=status.HTTP_200_OK, response_model=List[schemas.User]
-)
+@router.get("/", status_code=status.HTTP_200_OK, response_model=List[schemas.User])
 def read_users(
     skip: int = 0,
     limit: int = 100,
@@ -33,9 +29,7 @@ def read_users(
     return users
 
 
-@router.get(
-    "/users/{user_id}", status_code=status.HTTP_200_OK, response_model=schemas.User
-)
+@router.get("/{user_id}", status_code=status.HTTP_200_OK, response_model=schemas.User)
 def read_user(user_id: int, db: database.SessionLocal = Depends(database.get_db)):
     db_user = crud.get_user(db, user_id=user_id)
     if db_user is None:
@@ -44,7 +38,7 @@ def read_user(user_id: int, db: database.SessionLocal = Depends(database.get_db)
 
 
 # Delete
-@router.delete("/user/{user_id}", status_code=200)
+@router.delete("/{user_id}", status_code=200)
 def delete_user(user_id: int, db: database.SessionLocal = Depends(database.get_db)):
     db_user = crud.get_user(db, user_id=user_id)
     if db_user is None:

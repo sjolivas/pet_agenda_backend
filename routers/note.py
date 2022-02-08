@@ -5,11 +5,11 @@ import database
 import schemas
 
 
-router = APIRouter(tags=["notes"])
+router = APIRouter(prefix="/users", tags=["notes"])
 
 # Create
 @router.post(
-    "/users/{user_id}/notes",
+    "/{user_id}/notes",
     status_code=status.HTTP_201_CREATED,
     response_model=schemas.Note,
 )
@@ -23,7 +23,7 @@ def create_note(
 
 # Read
 @router.get(
-    "/users/{user_id}/notes",
+    "/{user_id}/notes",
     status_code=status.HTTP_200_OK,
     response_model=List[schemas.Note],
 )
@@ -41,7 +41,7 @@ def read_notes(
 
 
 @router.get(
-    "/users/{user_id}/notes/{note_id}",
+    "/{user_id}/notes/{note_id}",
     status_code=status.HTTP_200_OK,
     response_model=schemas.Note,
 )
@@ -60,7 +60,7 @@ def read_note(
 
 # Delete
 @router.delete(
-    "/users/{user_id}/notes/{note_id}",
+    "/{user_id}/notes/{note_id}",
     status_code=status.HTTP_200_OK,
 )
 def delete_note(
