@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-import crud
+from crud.medical_info import get_medicalinfo, create_pet_medinfo, delete_medicalinfo
+from crud.pet import get_pet
 import database
 import schemas
 
@@ -17,7 +18,7 @@ def create_medinfo(
     medical_info: schemas.MedicalInfoCreate,
     db: database.SessionLocal = Depends(database.get_db),
 ):
-    return crud.create_pet_medinfo(db=db, medical_info=medical_info, pet_id=pet_id)
+    return create_pet_medinfo(db=db, medical_info=medical_info, pet_id=pet_id)
 
 
 # Read
@@ -32,8 +33,8 @@ def read_medicalinfo(
     user_id: int,
     db: database.SessionLocal = Depends(database.get_db),
 ):
-    pet = crud.get_pet(db, pet_id=pet_id, user_id=user_id)
-    medicalinfo = crud.get_medicalinfo(db, medicalinfo_id, pet_id)
+    pet = get_pet(db, pet_id=pet_id, user_id=user_id)
+    medicalinfo = get_medicalinfo(db, medicalinfo_id, pet_id)
     if pet is None:
         raise HTTPException(status_code=404, detail="Pet not found")
     if medicalinfo is None:
@@ -52,10 +53,10 @@ def delete_pet_medicalinfo(
     user_id: int,
     db: database.SessionLocal = Depends(database.get_db),
 ):
-    pet = crud.get_pet(db, pet_id=pet_id, user_id=user_id)
-    medicalinfo = crud.get_medicalinfo(db, medicalinfo_id, pet_id)
+    pet = get_pet(db, pet_id=pet_id, user_id=user_id)
+    medicalinfo = get_medicalinfo(db, medicalinfo_id, pet_id)
     if pet is None:
         raise HTTPException(status_code=404, detail="Pet not found")
     if medicalinfo is None:
         raise HTTPException(status_code=404, detail="Diet not found")
-    return crud.delete_medicalinfo(db, medicalinfo_id, pet_id)
+    return delete_medicalinfo(db, medicalinfo_id, pet_id)

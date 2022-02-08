@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-import crud
+from crud.diet import create_pet_diet, get_diet, delete_diet
+from crud.pet import get_pet
 import database
 import schemas
 
@@ -18,10 +19,10 @@ def create_diet(
     diet: schemas.DietCreate,
     db: database.SessionLocal = Depends(database.get_db),
 ):
-    pet = crud.get_pet(db, pet_id=pet_id, user_id=user_id)
+    pet = get_pet(db, pet_id=pet_id, user_id=user_id)
     if pet is None:
         raise HTTPException(status_code=404, detail="Pet not found")
-    return crud.create_pet_diet(db=db, diet=diet, pet_id=pet_id)
+    return create_pet_diet(db=db, diet=diet, pet_id=pet_id)
 
 
 # Read
@@ -36,8 +37,8 @@ def read_diet(
     user_id: int,
     db: database.SessionLocal = Depends(database.get_db),
 ):
-    pet = crud.get_pet(db, pet_id=pet_id, user_id=user_id)
-    diet = crud.get_diet(db, diet_id, pet_id)
+    pet = get_pet(db, pet_id=pet_id, user_id=user_id)
+    diet = get_diet(db, diet_id, pet_id)
     if pet is None:
         raise HTTPException(status_code=404, detail="Pet not found")
     if diet is None:
@@ -56,10 +57,10 @@ def delete_pet_diet(
     user_id: int,
     db: database.SessionLocal = Depends(database.get_db),
 ):
-    pet = crud.get_pet(db, pet_id=pet_id, user_id=user_id)
-    diet = crud.get_diet(db, diet_id, pet_id)
+    pet = get_pet(db, pet_id=pet_id, user_id=user_id)
+    diet = get_diet(db, diet_id, pet_id)
     if pet is None:
         raise HTTPException(status_code=404, detail="Pet not found")
     if diet is None:
         raise HTTPException(status_code=404, detail="Diet not found")
-    return crud.delete_diet(db, diet_id, pet_id)
+    return delete_diet(db, diet_id, pet_id)
