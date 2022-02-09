@@ -79,12 +79,23 @@ class ShoppingList(Base):
     id = Column(Integer, primary_key=True, index=True)
     owner_id = Column(Integer, ForeignKey("users.id"))
     title = Column(String)
-    items = Column(String)
-    item_count = Column(Integer)
     created_at = Column(DateTime, default=datetime.utcnow())
     updated_at = Column(DateTime, default=datetime.utcnow())
 
+    items = relationship("Item", back_populates="owner")
     owner = relationship("User", back_populates="shoppinglist")
+
+
+class Item(Base):
+    __tablename__ = "items"
+    id = Column(Integer, primary_key=True, index=True)
+    owner_id = Column(Integer, ForeignKey("shoppinglist.id"))
+    name = Column(String)
+    count = Column(Integer)
+    created_at = Column(DateTime, default=datetime.utcnow())
+    updated_at = Column(DateTime, default=datetime.utcnow())
+
+    owner = relationship("ShoppingList", back_populates="items")
 
 
 class Diet(Base):

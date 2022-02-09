@@ -2,7 +2,7 @@ from fastapi import FastAPI, status
 import models
 from database import engine
 from fastapi.middleware.cors import CORSMiddleware
-from routers import user, pet, diet, medical_info, note, shopping_list
+from routers import user, pet, diet, medical_info, note, shopping_list, item
 
 
 # creates the tables in our database
@@ -17,6 +17,7 @@ app.include_router(diet.router)
 app.include_router(medical_info.router)
 app.include_router(note.router)
 app.include_router(shopping_list.router)
+app.include_router(item.router)
 
 # Make the connection to our frontend
 origins = ["https://localhost:3000"]

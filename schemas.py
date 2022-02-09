@@ -2,11 +2,34 @@ from typing import List, Optional
 from pydantic import BaseModel, NonNegativeInt, EmailStr
 from datetime import datetime, date
 
+
+# Item Schema
+class ItemBase(BaseModel):
+    name: str
+    count: int
+
+
+class ItemCreate(ItemBase):
+    created_at: datetime
+
+
+class Item(ItemBase):
+    id: int
+    owner_id: int
+    updated_at: datetime
+
+    class Config:
+        orm_mode = True
+
+
+class ItemUpdate(BaseModel):
+    name: Optional[str] = None
+    count: Optional[int] = None
+
+
 # Shopping List Schema
 class ShoppingListBase(BaseModel):
     title: str
-    items: List[str] = []
-    item_count: int
 
 
 class ShoppingListCreate(ShoppingListBase):
@@ -15,6 +38,7 @@ class ShoppingListCreate(ShoppingListBase):
 
 class ShoppingList(ShoppingListBase):
     id: int
+    items: List[Item] = []
     owner_id: int
     updated_at: datetime
 
@@ -24,8 +48,6 @@ class ShoppingList(ShoppingListBase):
 
 class ShoppingListUpdate(BaseModel):
     title: Optional[str] = None
-    items: Optional[List[str]] = []
-    item_count: Optional[str] = None
 
 
 # Note Schema
