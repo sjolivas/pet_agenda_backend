@@ -12,7 +12,7 @@ import database
 import schemas
 
 
-router = APIRouter(prefix="/users", tags=["users"])
+router = APIRouter(prefix="/users", tags=["Users"])
 
 # Create - post operation
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.User)

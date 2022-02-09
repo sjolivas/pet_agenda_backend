@@ -7,7 +7,7 @@ from routers import user
 import schemas
 
 
-router = APIRouter(prefix="/users", tags=["medical info"])
+router = APIRouter(prefix="/users", tags=["Medical Information"])
 
 # Create - post operation
 @router.post(

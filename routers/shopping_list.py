@@ -10,7 +10,7 @@ import database
 import schemas
 
 
-router = APIRouter(prefix="/users", tags=["shopping list"])
+router = APIRouter(prefix="/users", tags=["Shopping List"])
 
 # Create - post operation
 @router.post(
