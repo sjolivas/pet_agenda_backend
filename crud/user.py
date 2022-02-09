@@ -1,7 +1,8 @@
+from sre_constants import GROUPREF_EXISTS
 from sqlalchemy.orm import Session
 import models, schemas
 from passlib.hash import bcrypt
-from datetime import datetime
+
 
 # User Create Utility Function
 def create_new_user(db: Session, user: schemas.UserCreate):
@@ -30,13 +31,8 @@ def get_users(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.User).offset(skip).limit(limit).all()
 
 
-# User Update Utility Function
-def update_user():
-    pass
-
-
 # User DELETE utility functions
-def delete_user(db: Session, user_id: int):
+def destroy_user(db: Session, user_id: int):
     (
         db.query(models.User)
         .filter(models.User.id == user_id)
@@ -44,4 +40,4 @@ def delete_user(db: Session, user_id: int):
     )
     db.commit()
 
-    return {"message" ": Successfully Deleted"}
+    return {"message": "Successfully Deleted"}

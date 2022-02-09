@@ -1,5 +1,14 @@
 from datetime import datetime
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime, Date
+from sqlalchemy import (
+    Boolean,
+    Column,
+    Float,
+    ForeignKey,
+    Integer,
+    String,
+    DateTime,
+    Date,
+)
 from sqlalchemy.orm import relationship
 from passlib.hash import bcrypt
 
@@ -83,7 +92,7 @@ class Diet(Base):
     id = Column(Integer, primary_key=True, index=True)
     owner_id = Column(Integer, ForeignKey("pets.id"))
     food_type = Column(String)
-    amount_per_day = Column(Integer)
+    amount_per_day = Column(Float)
     feeding_frequency = Column(Integer)
     treats = Column(String)
     allergies = Column(String, default=None)

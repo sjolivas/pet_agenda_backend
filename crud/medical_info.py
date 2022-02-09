@@ -14,18 +14,13 @@ def create_pet_medinfo(
 
 
 # MedicalInfo READ utility functions
-def get_medicalinfo(db: Session, medicalinfo_id: int, pet_id: int):
+def get_medicalinfo(db: Session, medicalinfo_id: int, pet_id: int, user_id: int):
     return (
         db.query(models.MedicalInfo)
-        .filter(models.MedicalInfo.id == medicalinfo_id)
         .filter(models.MedicalInfo.owner_id == pet_id)
+        .filter(models.MedicalInfo.id == medicalinfo_id)
         .first()
     )
-
-
-# medicalinfo Update Utility function
-def update_medicalinfo():
-    pass
 
 
 # Medical Info DELETE utility functions

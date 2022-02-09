@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from crud.diet import create_pet_diet, get_diet, delete_diet
 from crud.pet import get_pet
+from crud.user import get_user
 import database
 import schemas
 
@@ -19,7 +20,10 @@ def create_diet(
     diet: schemas.DietCreate,
     db: database.SessionLocal = Depends(database.get_db),
 ):
+    db_user = get_user(db, user_id=user_id)
     pet = get_pet(db, pet_id=pet_id, user_id=user_id)
+    if db_user is None:
+        raise HTTPException(status_code=404, detail="User not found")
     if pet is None:
         raise HTTPException(status_code=404, detail="Pet not found")
     return create_pet_diet(db=db, diet=diet, pet_id=pet_id)
@@ -37,8 +41,11 @@ def read_diet(
     user_id: int,
     db: database.SessionLocal = Depends(database.get_db),
 ):
+    db_user = get_user(db, user_id=user_id)
     pet = get_pet(db, pet_id=pet_id, user_id=user_id)
     diet = get_diet(db, diet_id, pet_id)
+    if db_user is None:
+        raise HTTPException(status_code=404, detail="User not found")
     if pet is None:
         raise HTTPException(status_code=404, detail="Pet not found")
     if diet is None:
@@ -52,8 +59,29 @@ def read_diet(
     status_code=status.HTTP_202_ACCEPTED,
     response_model=schemas.Diet,
 )
-def patch_diet_info():
-    pass
+def patch_diet_info(
+    diet_id: int,
+    pet_id: int,
+    user_id: int,
+    diet: schemas.DietUpdate,
+    db: database.SessionLocal = Depends(database.get_db),
+):
+    db_user = get_user(db, user_id=user_id)
+    db_pet = get_pet(db, pet_id=pet_id, user_id=user_id)
+    db_diet = get_diet(db, diet_id, pet_id)
+    if db_user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    if db_pet is None:
+        raise HTTPException(status_code=404, detail="Pet not found")
+    if db_diet is None:
+        raise HTTPException(status_code=404, detail="Diet not found")
+    diet_data = diet.dict(exclude_unset=True)
+    for key, value in diet_data.items():
+        setattr(db_diet, key, value)
+    db.add(db_diet)
+    db.commit()
+    db.refresh(db_diet)
+    return db_diet
 
 
 # Delete - delete operation
@@ -67,8 +95,11 @@ def delete_pet_diet(
     user_id: int,
     db: database.SessionLocal = Depends(database.get_db),
 ):
+    db_user = get_user(db, user_id=user_id)
     pet = get_pet(db, pet_id=pet_id, user_id=user_id)
     diet = get_diet(db, diet_id, pet_id)
+    if db_user is None:
+        raise HTTPException(status_code=404, detail="User not found")
     if pet is None:
         raise HTTPException(status_code=404, detail="Pet not found")
     if diet is None:

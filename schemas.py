@@ -22,6 +22,12 @@ class ShoppingList(ShoppingListBase):
         orm_mode = True
 
 
+class ShoppingListUpdate(BaseModel):
+    title: Optional[str] = None
+    items: Optional[List[str]] = []
+    item_count: Optional[str] = None
+
+
 # Note Schema
 class NoteBase(BaseModel):
     title: str
@@ -39,6 +45,11 @@ class Note(NoteBase):
 
     class Config:
         orm_mode = True
+
+
+class NoteUpdate(BaseModel):
+    title: Optional[str] = None
+    message: Optional[str] = None
 
 
 # Medical Information Schema
@@ -64,10 +75,19 @@ class MedicalInfo(MedicalInfoBase):
         orm_mode = True
 
 
+class MedicalInfoUpdate(BaseModel):
+    microchip_number: Optional[str] = None
+    vaccinations: Optional[str] = None
+    last_vet_apt: Optional[date] = None
+    past_injuries: Optional[str] = None
+    medications: Optional[str] = None
+    allergies: Optional[str] = None
+
+
 # Diet Schema
 class DietBase(BaseModel):
     food_type: str
-    amount_per_day: int
+    amount_per_day: float
     feeding_frequency: int
     treats: str
 
@@ -83,6 +103,13 @@ class Diet(DietBase):
 
     class Config:
         orm_mode = True
+
+
+class DietUpdate(BaseModel):
+    food_type: Optional[str] = None
+    amount_per_day: Optional[float] = None
+    feeding_frequency: Optional[int] = None
+    treats: Optional[str] = None
 
 
 # Pet Schema
@@ -117,6 +144,22 @@ class Pet(PetBase):
         orm_mode = True
 
 
+class PetUpdate(BaseModel):
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+    birthday: Optional[date] = None
+    adopt_date: Optional[date] = None
+    age: Optional[NonNegativeInt] = None
+    weight: Optional[int] = None
+    breed: Optional[str] = None
+    color: Optional[str] = None
+    other_characteristics: Optional[str] = None
+    fav_person: Optional[str] = None
+    fav_activity: Optional[str] = None
+    fav_treat: Optional[str] = None
+    fav_toy: Optional[str] = None
+
+
 # User Schema
 class UserBase(BaseModel):
     first_name: str
@@ -141,8 +184,7 @@ class User(UserBase):
         orm_mode = True
 
 
-# class UserUpdate(BaseModel):
-#     first_name: Optional[str] = None
-#     last_name: Optional[str] = None
-#     email: Optional[EmailStr] = None
-#     hashed_password: Optional[str] = None
+class UserUpdate(BaseModel):
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+    email: Optional[EmailStr] = None

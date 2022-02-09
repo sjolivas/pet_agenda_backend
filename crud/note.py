@@ -1,9 +1,9 @@
 from sqlalchemy.orm import Session
 import models, schemas
-from datetime import datetime
+
 
 # Note Create Utility Function
-def create_note(db: Session, note: schemas.NoteCreate, user_id: int):
+def create_user_note(db: Session, note: schemas.NoteCreate, user_id: int):
     db_note = models.Note(**note.dict(), owner_id=user_id)
     db.add(db_note)
     db.commit()
@@ -31,13 +31,8 @@ def get_note(db: Session, note_id: int, user_id: int):
     )
 
 
-# Note Update Utility function
-def update_note():
-    pass
-
-
 # Note DELETE utility functions
-def delete_note(db: Session, note_id: int, user_id: int):
+def destroy_note(db: Session, note_id: int, user_id: int):
     (
         db.query(models.Note)
         .filter(models.Note.owner_id == user_id)
@@ -46,4 +41,4 @@ def delete_note(db: Session, note_id: int, user_id: int):
     )
     db.commit()
 
-    return "Successfully Deleted"
+    return {"message": "Successfully Deleted"}

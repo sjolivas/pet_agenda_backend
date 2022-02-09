@@ -1,7 +1,7 @@
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status
 from crud.user import get_user
-from crud.pet import get_pet, create_user_pet, get_pets, delete_pet
+from crud.pet import get_pet, create_user_pet, get_pets, delete_user_pet
 import database
 import schemas
 
@@ -67,8 +67,25 @@ def read_pet(
     status_code=status.HTTP_202_ACCEPTED,
     response_model=schemas.Pet,
 )
-def patch_pet_info():
-    pass
+def patch_pet_info(
+    pet_id: int,
+    user_id: int,
+    pet: schemas.PetUpdate,
+    db: database.SessionLocal = Depends(database.get_db),
+):
+    db_user = get_user(db, user_id)
+    db_pet = get_pet(db, pet_id=pet_id, user_id=user_id)
+    if not db_user:
+        raise HTTPException(status_code=404, detail="User not found")
+    if db_pet is None:
+        raise HTTPException(status_code=404, detail="Pet not found")
+    pet_data = pet.dict(exclude_unset=True)
+    for key, value in pet_data.items():
+        setattr(db_pet, key, value)
+    db.add(db_pet)
+    db.commit()
+    db.refresh(db_pet)
+    return db_pet
 
 
 # Delete - delete operation
@@ -77,9 +94,9 @@ def delete_pet(
     pet_id: int, user_id: int, db: database.SessionLocal = Depends(database.get_db)
 ):
     db_user = get_user(db, user_id=user_id)
-    pet = get_pet(db, pet_id=pet_id)
+    pet = get_pet(db, pet_id=pet_id, user_id=user_id)
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")
     if pet is None:
         raise HTTPException(status_code=404, detail="Pet not found")
-    return delete_pet(db, pet_id, user_id)
+    return delete_user_pet(db, pet_id, user_id)
