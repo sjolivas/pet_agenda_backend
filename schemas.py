@@ -206,8 +206,8 @@ class User(UserBase):
         orm_mode = True
 
 
-class UserInDB(UserBase):
-    hashed_password: str
+# class UserInDB(UserBase):
+#     hashed_password: str
 
 
 class UserUpdate(BaseModel):
@@ -216,10 +216,10 @@ class UserUpdate(BaseModel):
     email: Optional[EmailStr] = None
 
 
-class Token(BaseModel):
-    access_token: str
-    token_type: str
+# class Token(BaseModel):
+#     access_token: str
+#     token_type: str
 
 
-class TokenData(BaseModel):
-    email: Optional[str] = None
+# class TokenData(BaseModel):
+#     email: Optional[str] = None
