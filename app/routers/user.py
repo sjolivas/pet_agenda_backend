@@ -1,4 +1,5 @@
 from typing import List
+from xml.dom.expatbuilder import FilterVisibilityController
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from crud.user import (
@@ -8,6 +9,7 @@ from crud.user import (
     destroy_user,
     create_new_user,
     create_access_token,
+    authenticate_user_login,
 )
 import schemas, models, database, oauth2
 
@@ -15,6 +17,20 @@ import schemas, models, database, oauth2
 router = APIRouter(tags=["Users"])
 
 # Create - post operation
+@router.post("/token")
+def generate_token(
+    form_data: OAuth2PasswordRequestForm = Depends(),
+    db: database.SessionLocal = Depends(database.get_db),
+):
+    user = authenticate_user_login(db, form_data.username, form_data.password)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid Credentials"
+        )
+    access_token = create_access_token(data={"sub": user.email})
+    return {"access_token": access_token, "token_type": "bearer"}
+
+
 @router.post("/users", status_code=status.HTTP_201_CREATED, response_model=schemas.User)
 def create_user(
     user: schemas.UserCreate, db: database.SessionLocal = Depends(database.get_db)
@@ -23,20 +39,6 @@ def create_user(
     if db_user:
         raise HTTPException(status_code=409, detail="Email already registered")
     return create_new_user(db=db, user=user)
-
-
-@router.post("/token")
-def generate_token(
-    request: OAuth2PasswordRequestForm = Depends(),
-    db: database.SessionLocal = Depends(database.get_db),
-):
-    user = db.query(models.User).filter(models.User.email == request.username).first()
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid Credentials"
-        )
-    access_token = create_access_token(data={"sub": user.email})
-    return {"access_token": access_token, "token_type": "bearer"}
 
 
 # Read - get operations
@@ -50,6 +52,7 @@ def read_users(
     skip: int = 0,
     limit: int = 100,
     db: database.SessionLocal = Depends(database.get_db),
+    get_current_user: schemas.User = Depends(oauth2.get_current_user),
 ):
     users = get_users(db, skip=skip, limit=limit)
     return users

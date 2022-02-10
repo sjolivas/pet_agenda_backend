@@ -206,6 +206,10 @@ class User(UserBase):
         orm_mode = True
 
 
+class UserInDB(UserBase):
+    hashed_password: str
+
+
 class UserUpdate(BaseModel):
     first_name: Optional[str] = None
     last_name: Optional[str] = None

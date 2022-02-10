@@ -1,5 +1,6 @@
+from fastapi import Depends
 from sqlalchemy.orm import Session
-import models, schemas
+import models, schemas, database
 from passlib.hash import bcrypt
 from datetime import datetime, timedelta
 from jose import JWTError, jwt
