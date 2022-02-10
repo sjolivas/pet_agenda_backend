@@ -1,6 +1,10 @@
 from sqlalchemy.orm import Session
 import models, schemas
 from passlib.hash import bcrypt
+from datetime import datetime, timedelta
+from jose import JWTError, jwt
+from typing import Optional
+from core.config import SECRET_KEY, ALGORITHM
 
 
 # User Create Utility Function
@@ -24,6 +28,35 @@ def get_user(db: Session, user_id: int):
 
 def get_user_by_email(db: Session, email: str):
     return db.query(models.User).filter(models.User.email == email).first()
+
+
+def authenticate_user_login(db: Session, email: str, password: str):
+    user = get_user_by_email(db, email)
+    if not user or not user.verify_password(password):
+        return False
+    return user
+
+
+def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
+    to_encode = data.copy()
+    if expires_delta:
+        expire = datetime.utcnow() + expires_delta
+    else:
+        expire = datetime.utcnow() + timedelta(minutes=15)
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
+
+
+def verify_token(token: str, credentials_exception):
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        email: str = payload.get("sub")
+        if email is None:
+            raise credentials_exception
+        token_data = schemas.TokenData(email=email)
+    except JWTError:
+        raise credentials_exception
 
 
 def get_users(db: Session, skip: int = 0, limit: int = 100):

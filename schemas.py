@@ -212,15 +212,15 @@ class UserUpdate(BaseModel):
     email: Optional[EmailStr] = None
 
 
-class Login(BaseModel):
-    username: str
-    password: str
+# class Login(BaseModel):
+#     username: str
+#     password: str
 
 
-class Token(BaseModel):
-    access_token: str
-    token_type: str
+# class Token(BaseModel):
+#     access_token: str
+#     token_type: str
 
 
-class TokenData(BaseModel):
-    username: Optional[str] = None
+# class TokenData(BaseModel):
+#     email: Optional[str] = None

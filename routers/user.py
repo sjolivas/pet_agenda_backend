@@ -1,21 +1,26 @@
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordRequestForm
+from core.config import ACCESS_TOKEN_EXPIRE_MINUTES
+from datetime import timedelta
 from crud.user import (
     get_user,
     get_users,
     get_user_by_email,
     destroy_user,
     create_new_user,
-    # update_user,
+    create_access_token,
+    authenticate_user_login,
+    verify_token,
 )
 import database
 import schemas
 
 
-router = APIRouter(prefix="/users", tags=["Users"])
+router = APIRouter(tags=["Users"])
 
 # Create - post operation
-@router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.User)
+@router.post("/users", status_code=status.HTTP_201_CREATED, response_model=schemas.User)
 def create_user(
     user: schemas.UserCreate, db: database.SessionLocal = Depends(database.get_db)
 ):
@@ -25,8 +30,25 @@ def create_user(
     return create_new_user(db=db, user=user)
 
 
+@router.post("/token")
+def generate_token(
+    form_data: OAuth2PasswordRequestForm = Depends(),
+    db: database.SessionLocal = Depends(database.get_db),
+):
+    user = authenticate_user_login(db, form_data.username, form_data.password)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid Credentials"
+        )
+    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = create_access_token(
+        data={"sub": user.email}, expires_delta=access_token_expires
+    )
+    return {"access_token": access_token, "token_type": "bearer"}
+
+
 # Read - get operations
-@router.get("/", status_code=status.HTTP_200_OK, response_model=List[schemas.User])
+@router.get("/users", status_code=status.HTTP_200_OK, response_model=List[schemas.User])
 def read_users(
     skip: int = 0,
     limit: int = 100,
@@ -36,7 +58,9 @@ def read_users(
     return users
 
 
-@router.get("/{user_id}", status_code=status.HTTP_200_OK, response_model=schemas.User)
+@router.get(
+    "/users/{user_id}", status_code=status.HTTP_200_OK, response_model=schemas.User
+)
 def read_user(user_id: int, db: database.SessionLocal = Depends(database.get_db)):
     db_user = get_user(db, user_id=user_id)
     if db_user is None:
@@ -46,7 +70,9 @@ def read_user(user_id: int, db: database.SessionLocal = Depends(database.get_db)
 
 # Update - put and patch operation
 @router.put(
-    "/{user_id}", status_code=status.HTTP_202_ACCEPTED, response_model=schemas.User
+    "/users/{user_id}",
+    status_code=status.HTTP_202_ACCEPTED,
+    response_model=schemas.User,
 )
 def update_all_user_info(
     user_id: int,
@@ -72,7 +98,9 @@ def update_all_user_info(
 
 # Patch - patch operation
 @router.patch(
-    "/{user_id}", status_code=status.HTTP_202_ACCEPTED, response_model=schemas.User
+    "/users/{user_id}",
+    status_code=status.HTTP_202_ACCEPTED,
+    response_model=schemas.User,
 )
 def patch_user_info(
     user_id: int,
@@ -92,7 +120,7 @@ def patch_user_info(
 
 
 # Delete - delete operation
-@router.delete("/{user_id}", status_code=200)
+@router.delete("/users/{user_id}", status_code=200)
 def delete_user(user_id: int, db: database.SessionLocal = Depends(database.get_db)):
     db_user = get_user(db, user_id=user_id)
     if db_user is None:

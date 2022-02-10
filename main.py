@@ -20,7 +20,7 @@ models.Base.metadata.create_all(bind=engine)
 # app object
 app = FastAPI()
 
-app.include_router(authenication.router)
+# app.include_router(authenication.router)
 app.include_router(user.router)
 app.include_router(pet.router)
 app.include_router(diet.router)
