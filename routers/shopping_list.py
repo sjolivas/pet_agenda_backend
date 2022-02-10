@@ -5,7 +5,7 @@ from crud.shopping_list import (
     get_shoppinglist,
     destroy_shoppinglist,
 )
-import database, schemas
+import database, schemas, oauth2
 
 
 router = APIRouter(prefix="/users", tags=["Shopping List"])
@@ -20,7 +20,7 @@ def create_shoppinglist(
     user_id: int,
     shoppinglist: schemas.ShoppingListCreate,
     db: database.SessionLocal = Depends(database.get_db),
-    # get_current_user: schemas.User = Depends(oauth2.get_current_user),
+    get_current_user: schemas.User = Depends(oauth2.get_current_user),
 ):
     db_user = get_user(db, user_id=user_id)
     if db_user is None:
@@ -38,7 +38,7 @@ def read_shoppinglist(
     shoppinglist_id: int,
     user_id: int,
     db: database.SessionLocal = Depends(database.get_db),
-    # get_current_user: schemas.User = Depends(oauth2.get_current_user),
+    get_current_user: schemas.User = Depends(oauth2.get_current_user),
 ):
     db_user = get_user(db, user_id=user_id)
     shoppinglist = get_shoppinglist(
@@ -65,7 +65,7 @@ def patch_shoppinglist_info(
     user_id: int,
     shoppinglist: schemas.ShoppingListUpdate,
     db: database.SessionLocal = Depends(database.get_db),
-    # get_current_user: schemas.User = Depends(oauth2.get_current_user),
+    get_current_user: schemas.User = Depends(oauth2.get_current_user),
 ):
     db_user = get_user(db, user_id)
     db_shoppinglist = get_shoppinglist(
@@ -95,7 +95,7 @@ def delete_shoppinglist(
     db: database.SessionLocal = Depends(
         database.get_db,
     ),
-    # get_current_user: schemas.User = Depends(oauth2.get_current_user),
+    get_current_user: schemas.User = Depends(oauth2.get_current_user),
 ):
     db_user = get_user(db, user_id=user_id)
     shoppinglist = get_shoppinglist(

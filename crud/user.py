@@ -1,11 +1,9 @@
-# from fastapi import Depends
 from sqlalchemy.orm import Session
 import models, schemas
 from passlib.hash import bcrypt
-
-# from datetime import datetime, timedelta
-# from jose import JWTError, jwt
-# from core.config import SECRET_KEY, ALGORITHM
+from datetime import datetime, timedelta
+from jose import JWTError, jwt
+from core.config import SECRET_KEY, ALGORITHM
 
 
 # User Create Utility Function
@@ -22,32 +20,32 @@ def create_new_user(db: Session, user: schemas.UserCreate):
     return db_user
 
 
-# # AUTHENTICATION AND TOKENS
-# def authenticate_user_login(db: Session, email: str, password: str):
-#     user = get_user_by_email(db, email)
-#     if not user or not user.verify_password(password):
-#         return False
-#     return user
+# AUTHENTICATION AND TOKENS
+def authenticate_user_login(db: Session, email: str, password: str):
+    user = get_user_by_email(db, email)
+    if not user or not user.verify_password(password):
+        return False
+    return user
 
 
-# def create_access_token(data: dict):
-#     to_encode = data.copy()
-#     expire = datetime.utcnow() + timedelta(minutes=15)
-#     to_encode.update({"exp": expire})
-#     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
-#     return encoded_jwt
+def create_access_token(data: dict):
+    to_encode = data.copy()
+    expire = datetime.utcnow() + timedelta(minutes=15)
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
 
 
-# def verify_token(token: str, credentials_exception):
-#     try:
-#         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-#         email: str = payload.get("sub")
-#         if email is None:
-#             raise credentials_exception
-#         token_data = schemas.TokenData(email=email)
-#     except JWTError:
-#         raise credentials_exception
-#     return token_data
+def verify_token(token: str, credentials_exception):
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        email: str = payload.get("sub")
+        if email is None:
+            raise credentials_exception
+        token_data = schemas.TokenData(email=email)
+    except JWTError:
+        raise credentials_exception
+    return token_data
 
 
 # User READ utility functions

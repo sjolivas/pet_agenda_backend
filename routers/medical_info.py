@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from crud.medical_info import get_medicalinfo, create_pet_medinfo, delete_medicalinfo
 from crud.pet import get_pet
 from crud.user import get_user
-import database, schemas
+import database, schemas, oauth2
 
 
 router = APIRouter(prefix="/users", tags=["Medical Information"])
@@ -18,7 +18,7 @@ def create_medinfo(
     pet_id: int,
     medical_info: schemas.MedicalInfoCreate,
     db: database.SessionLocal = Depends(database.get_db),
-    # get_current_user: schemas.User = Depends(oauth2.get_current_user),
+    get_current_user: schemas.User = Depends(oauth2.get_current_user),
 ):
     db_user = get_user(db, user_id=user_id)
     pet = get_pet(db, pet_id=pet_id, user_id=user_id)
@@ -40,7 +40,7 @@ def read_medicalinfo(
     medicalinfo_id: int,
     user_id: int,
     db: database.SessionLocal = Depends(database.get_db),
-    # get_current_user: schemas.User = Depends(oauth2.get_current_user),
+    get_current_user: schemas.User = Depends(oauth2.get_current_user),
 ):
     db_user = get_user(db, user_id=user_id)
     pet = get_pet(db, pet_id=pet_id, user_id=user_id)
@@ -66,7 +66,7 @@ def patch_medical_info(
     user_id: int,
     medicalinfo: schemas.MedicalInfoUpdate,
     db: database.SessionLocal = Depends(database.get_db),
-    # get_current_user: schemas.User = Depends(oauth2.get_current_user),
+    get_current_user: schemas.User = Depends(oauth2.get_current_user),
 ):
     db_user = get_user(db, user_id=user_id)
     db_pet = get_pet(db, pet_id=pet_id, user_id=user_id)
@@ -96,7 +96,7 @@ def delete_pet_medicalinfo(
     medicalinfo_id: int,
     user_id: int,
     db: database.SessionLocal = Depends(database.get_db),
-    # get_current_user: schemas.User = Depends(oauth2.get_current_user),
+    get_current_user: schemas.User = Depends(oauth2.get_current_user),
 ):
     db_user = get_user(db, user_id=user_id)
     pet = get_pet(db, pet_id=pet_id, user_id=user_id)
