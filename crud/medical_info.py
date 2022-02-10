@@ -1,6 +1,5 @@
 from sqlalchemy.orm import Session
 import models, schemas
-from datetime import datetime
 
 # MedicalInfo Create Utility Function
 def create_pet_medinfo(

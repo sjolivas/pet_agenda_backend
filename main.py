@@ -3,7 +3,6 @@ import models
 from database import engine
 from fastapi.middleware.cors import CORSMiddleware
 from routers import (
-    authenication,
     user,
     pet,
     diet,

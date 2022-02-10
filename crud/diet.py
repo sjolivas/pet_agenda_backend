@@ -1,6 +1,5 @@
 from sqlalchemy.orm import Session
 import models, schemas
-from datetime import datetime
 
 # Diet Create Utility Function
 def create_pet_diet(db: Session, diet: schemas.DietCreate, pet_id: int):

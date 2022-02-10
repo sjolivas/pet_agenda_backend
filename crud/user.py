@@ -3,7 +3,6 @@ import models, schemas
 from passlib.hash import bcrypt
 from datetime import datetime, timedelta
 from jose import JWTError, jwt
-from typing import Optional
 from core.config import SECRET_KEY, ALGORITHM
 
 
@@ -21,15 +20,7 @@ def create_new_user(db: Session, user: schemas.UserCreate):
     return db_user
 
 
-# User READ utility functions
-def get_user(db: Session, user_id: int):
-    return db.query(models.User).filter(models.User.id == user_id).first()
-
-
-def get_user_by_email(db: Session, email: str):
-    return db.query(models.User).filter(models.User.email == email).first()
-
-
+# AUTHENTICATION AND TOKENS
 def authenticate_user_login(db: Session, email: str, password: str):
     user = get_user_by_email(db, email)
     if not user or not user.verify_password(password):
@@ -37,12 +28,9 @@ def authenticate_user_login(db: Session, email: str, password: str):
     return user
 
 
-def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
+def create_access_token(data: dict):
     to_encode = data.copy()
-    if expires_delta:
-        expire = datetime.utcnow() + expires_delta
-    else:
-        expire = datetime.utcnow() + timedelta(minutes=15)
+    expire = datetime.utcnow() + timedelta(minutes=15)
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
@@ -57,6 +45,16 @@ def verify_token(token: str, credentials_exception):
         token_data = schemas.TokenData(email=email)
     except JWTError:
         raise credentials_exception
+    return token_data
+
+
+# User READ utility functions
+def get_user(db: Session, user_id: int):
+    return db.query(models.User).filter(models.User.id == user_id).first()
+
+
+def get_user_by_email(db: Session, email: str):
+    return db.query(models.User).filter(models.User.email == email).first()
 
 
 def get_users(db: Session, skip: int = 0, limit: int = 100):

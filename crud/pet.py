@@ -1,6 +1,5 @@
 from sqlalchemy.orm import Session
 import models, schemas
-from datetime import datetime
 
 # Pet Create utility function
 def create_user_pet(db: Session, pet: schemas.PetCreate, user_id: int):

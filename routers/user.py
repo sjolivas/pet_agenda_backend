@@ -1,8 +1,6 @@
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
-from core.config import ACCESS_TOKEN_EXPIRE_MINUTES
-from datetime import timedelta
 from crud.user import (
     get_user,
     get_users,
@@ -10,11 +8,8 @@ from crud.user import (
     destroy_user,
     create_new_user,
     create_access_token,
-    authenticate_user_login,
-    verify_token,
 )
-import database
-import schemas
+import schemas, models, database, oauth2
 
 
 router = APIRouter(tags=["Users"])
@@ -32,22 +27,24 @@ def create_user(
 
 @router.post("/token")
 def generate_token(
-    form_data: OAuth2PasswordRequestForm = Depends(),
+    request: OAuth2PasswordRequestForm = Depends(),
     db: database.SessionLocal = Depends(database.get_db),
 ):
-    user = authenticate_user_login(db, form_data.username, form_data.password)
+    user = db.query(models.User).filter(models.User.email == request.username).first()
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid Credentials"
         )
-    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = create_access_token(
-        data={"sub": user.email}, expires_delta=access_token_expires
-    )
+    access_token = create_access_token(data={"sub": user.email})
     return {"access_token": access_token, "token_type": "bearer"}
 
 
 # Read - get operations
+@router.get("/users/me")
+def get_me(user: schemas.User = Depends(oauth2.get_current_user)):
+    return user
+
+
 @router.get("/users", status_code=status.HTTP_200_OK, response_model=List[schemas.User])
 def read_users(
     skip: int = 0,
@@ -61,7 +58,11 @@ def read_users(
 @router.get(
     "/users/{user_id}", status_code=status.HTTP_200_OK, response_model=schemas.User
 )
-def read_user(user_id: int, db: database.SessionLocal = Depends(database.get_db)):
+def read_user(
+    user_id: int,
+    db: database.SessionLocal = Depends(database.get_db),
+    get_current_user: schemas.User = Depends(oauth2.get_current_user),
+):
     db_user = get_user(db, user_id=user_id)
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")
@@ -78,6 +79,7 @@ def update_all_user_info(
     user_id: int,
     user: schemas.User,
     db: database.SessionLocal = Depends(database.get_db),
+    get_current_user: schemas.User = Depends(oauth2.get_current_user),
 ):
     db_user = get_user(
         db,
@@ -106,6 +108,7 @@ def patch_user_info(
     user_id: int,
     user: schemas.UserUpdate,
     db: database.SessionLocal = Depends(database.get_db),
+    get_current_user: schemas.User = Depends(oauth2.get_current_user),
 ):
     db_user = get_user(db, user_id)
     if not db_user:
@@ -121,7 +124,11 @@ def patch_user_info(
 
 # Delete - delete operation
 @router.delete("/users/{user_id}", status_code=200)
-def delete_user(user_id: int, db: database.SessionLocal = Depends(database.get_db)):
+def delete_user(
+    user_id: int,
+    db: database.SessionLocal = Depends(database.get_db),
+    get_current_user: schemas.User = Depends(oauth2.get_current_user),
+):
     db_user = get_user(db, user_id=user_id)
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")

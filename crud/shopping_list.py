@@ -1,6 +1,5 @@
 from sqlalchemy.orm import Session
 import models, schemas
-from datetime import datetime
 
 # Shopping List Create utility function
 def create_user_shoppinglist(
