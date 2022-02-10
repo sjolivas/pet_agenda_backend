@@ -7,6 +7,9 @@ from pathlib import Path
 env_path = Path(".") / ".env"
 load_dotenv(dotenv_path=env_path)
 
+SECRET_KEY = os.environ["SECRET_KEY"]
+ALGORITHM = os.environ["ALGORITHM"]
+
 
 class Settings:
     PROJECT_NAME: str = "Pet Agenda"
