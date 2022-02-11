@@ -1,3 +1,4 @@
+from email import header
 from fastapi import FastAPI, status
 import models
 from database import engine
@@ -33,6 +34,7 @@ origins = [
     "https://localhost:3000",
     "https://localhost:3000",
     "http://localhost",
+    "localhost:3000",
     "http://localhost:8080",
 ]
 app.add_middleware(
