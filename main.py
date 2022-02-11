@@ -29,13 +29,13 @@ app.include_router(shopping_list.router)
 app.include_router(item.router)
 
 # Make the connection to our frontend
-origins = ["https://localhost:3000"]
-app.add_middleware(
-    CORSMiddleware,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# origins = ["https://localhost:3000"]
+# app.add_middleware(
+#     CORSMiddleware,
+#     allow_credentials=True,
+#     allow_methods=["*"],
+#     allow_headers=["*"],
+# )
 
 
 @app.get("/", status_code=status.HTTP_200_OK, tags=["Root"])
