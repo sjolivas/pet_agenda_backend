@@ -3,7 +3,9 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from crud.item import create_shopping_item, get_item, destroy_item, get_all_items
 from crud.shopping_list import get_shoppinglist
 from crud.user import get_user
-import database, schemas, oauth2
+import database, schemas
+
+# import oauth2
 
 
 router = APIRouter(prefix="/users", tags=["Item"])
@@ -19,7 +21,7 @@ def create_item(
     shoppinglist_id: int,
     item: schemas.ItemCreate,
     db: database.SessionLocal = Depends(database.get_db),
-    get_current_user: schemas.User = Depends(oauth2.get_current_user),
+    # get_current_user: schemas.User = Depends(oauth2.get_current_user),
 ):
     db_user = get_user(db, user_id=user_id)
     shoppinglist = get_shoppinglist(
@@ -44,7 +46,7 @@ def read_items(
     skip: int = 0,
     limit: int = 50,
     db: database.SessionLocal = Depends(database.get_db),
-    get_current_user: schemas.User = Depends(oauth2.get_current_user),
+    # get_current_user: schemas.User = Depends(oauth2.get_current_user),
 ):
     items = get_all_items(db, user_id, skip=skip, limit=limit)
     db_user = get_user(db, user_id=user_id)
@@ -68,7 +70,7 @@ def read_item(
     item_id: int,
     user_id: int,
     db: database.SessionLocal = Depends(database.get_db),
-    get_current_user: schemas.User = Depends(oauth2.get_current_user),
+    # get_current_user: schemas.User = Depends(oauth2.get_current_user),
 ):
     db_user = get_user(db, user_id=user_id)
     db_shoppinglist = get_shoppinglist(
@@ -96,7 +98,7 @@ def patch_item(
     user_id: int,
     item: schemas.ItemUpdate,
     db: database.SessionLocal = Depends(database.get_db),
-    get_current_user: schemas.User = Depends(oauth2.get_current_user),
+    # get_current_user: schemas.User = Depends(oauth2.get_current_user),
 ):
     db_user = get_user(db, user_id=user_id)
     db_shoppinglist = get_shoppinglist(
@@ -130,7 +132,7 @@ def delete_item(
     item_id: int,
     user_id: int,
     db: database.SessionLocal = Depends(database.get_db),
-    get_current_user: schemas.User = Depends(oauth2.get_current_user),
+    # get_current_user: schemas.User = Depends(oauth2.get_current_user),
 ):
     db_user = get_user(db, user_id=user_id)
     shoppinglist = get_shoppinglist(

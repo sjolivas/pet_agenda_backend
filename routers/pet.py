@@ -2,7 +2,9 @@ from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status
 from crud.user import get_user
 from crud.pet import get_pet, create_user_pet, get_pets, delete_user_pet
-import database, schemas, oauth2
+import database, schemas
+
+# import oauth2
 
 
 router = APIRouter(prefix="/users", tags=["Pets"])
@@ -17,7 +19,7 @@ def create_pet_for_user(
     user_id: int,
     pet: schemas.PetCreate,
     db: database.SessionLocal = Depends(database.get_db),
-    get_current_user: schemas.User = Depends(oauth2.get_current_user),
+    # get_current_user: schemas.User = Depends(oauth2.get_current_user),
 ):
     db_user = get_user(db, user_id=user_id)
     if db_user is None:
@@ -36,7 +38,7 @@ def read_pets(
     skip: int = 0,
     limit: int = 10,
     db: database.SessionLocal = Depends(database.get_db),
-    get_current_user: schemas.User = Depends(oauth2.get_current_user),
+    # get_current_user: schemas.User = Depends(oauth2.get_current_user),
 ):
     pets = get_pets(db, user_id, skip=skip, limit=limit)
     db_user = get_user(db, user_id=user_id)
@@ -54,7 +56,7 @@ def read_pet(
     pet_id: int,
     user_id: int,
     db: database.SessionLocal = Depends(database.get_db),
-    get_current_user: schemas.User = Depends(oauth2.get_current_user),
+    # get_current_user: schemas.User = Depends(oauth2.get_current_user),
 ):
     db_user = get_user(db, user_id=user_id)
     pet = get_pet(db, pet_id=pet_id, user_id=user_id)
@@ -76,7 +78,7 @@ def patch_pet_info(
     user_id: int,
     pet: schemas.PetUpdate,
     db: database.SessionLocal = Depends(database.get_db),
-    get_current_user: schemas.User = Depends(oauth2.get_current_user),
+    # get_current_user: schemas.User = Depends(oauth2.get_current_user),
 ):
     db_user = get_user(db, user_id)
     db_pet = get_pet(db, pet_id=pet_id, user_id=user_id)
@@ -99,7 +101,7 @@ def delete_pet(
     pet_id: int,
     user_id: int,
     db: database.SessionLocal = Depends(database.get_db),
-    get_current_user: schemas.User = Depends(oauth2.get_current_user),
+    # get_current_user: schemas.User = Depends(oauth2.get_current_user),
 ):
     db_user = get_user(db, user_id=user_id)
     pet = get_pet(db, pet_id=pet_id, user_id=user_id)

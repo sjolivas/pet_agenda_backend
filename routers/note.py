@@ -2,7 +2,9 @@ from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status
 from crud.note import get_note, get_all_notes, destroy_note, create_user_note
 from crud.user import get_user
-import database, schemas, oauth2
+import database, schemas
+
+# import oauth2
 
 
 router = APIRouter(prefix="/users", tags=["Notes"])
@@ -17,7 +19,7 @@ def create_note(
     user_id: int,
     note: schemas.NoteCreate,
     db: database.SessionLocal = Depends(database.get_db),
-    get_current_user: schemas.User = Depends(oauth2.get_current_user),
+    # get_current_user: schemas.User = Depends(oauth2.get_current_user),
 ):
     db_user = get_user(db, user_id=user_id)
     if db_user is None:
@@ -36,7 +38,7 @@ def read_notes(
     skip: int = 0,
     limit: int = 10,
     db: database.SessionLocal = Depends(database.get_db),
-    get_current_user: schemas.User = Depends(oauth2.get_current_user),
+    # get_current_user: schemas.User = Depends(oauth2.get_current_user),
 ):
     notes = get_all_notes(db, user_id, skip=skip, limit=limit)
     db_user = get_user(db, user_id=user_id)
@@ -54,7 +56,7 @@ def read_note(
     note_id: int,
     user_id: int,
     db: database.SessionLocal = Depends(database.get_db),
-    get_current_user: schemas.User = Depends(oauth2.get_current_user),
+    # get_current_user: schemas.User = Depends(oauth2.get_current_user),
 ):
     db_user = get_user(db, user_id=user_id)
     note = get_note(db, note_id=note_id, user_id=user_id)
@@ -77,7 +79,7 @@ def patch_note_info(
     user_id: int,
     note: schemas.NoteUpdate,
     db: database.SessionLocal = Depends(database.get_db),
-    get_current_user: schemas.User = Depends(oauth2.get_current_user),
+    # get_current_user: schemas.User = Depends(oauth2.get_current_user),
 ):
     db_user = get_user(db, user_id)
     db_note = get_note(db, note_id=note_id, user_id=user_id)
@@ -103,7 +105,7 @@ def delete_note(
     note_id: int,
     user_id: int,
     db: database.SessionLocal = Depends(database.get_db),
-    get_current_user: schemas.User = Depends(oauth2.get_current_user),
+    # get_current_user: schemas.User = Depends(oauth2.get_current_user),
 ):
     db_user = get_user(db, user_id=user_id)
     note = get_note(db, note_id=note_id, user_id=user_id)
